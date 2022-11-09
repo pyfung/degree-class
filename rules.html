@@ -1,0 +1,341 @@
+<html>
+<head>
+<link rel="stylesheet" href="../../style.css">
+<title>CO3105/4203/7105 Assignment 2: Degree Classification Rules</title>
+</head>
+<body>
+<h1>CO3105/4203/7105 Assignment 2: Degree Classification Rules</h1>
+
+<p>
+<b>Disclaimer</b>: the description below may or may not be exactly identical
+to the degree classification rules as stated by the university.
+The official rules can be found in the Senate Regulations:
+</p>
+<ul>
+<li>
+BScStudentOld:
+<a href="https://www2.le.ac.uk/offices/sas2/regulations/documents/sr5-july-2018">
+https://www2.le.ac.uk/offices/sas2/regulations/documents/sr5-july-2018</a>
+</li>
+<li>
+BScStudentNew:
+<a href="https://www2.le.ac.uk/offices/sas2/regulations/documents/sr5-ug-programmes_from-2018-19">
+https://www2.le.ac.uk/offices/sas2/regulations/documents/sr5-ug-programmes_from-2018-19</a>
+</li>
+<li>
+MScStudent:
+<a href="https://www2.le.ac.uk/offices/sas2/regulations/documents/sr6-taught-postgraduate">
+https://www2.le.ac.uk/offices/sas2/regulations/documents/sr6-taught-postgraduate</a>
+</li>
+</ul>
+<p>
+In particular, some simplifications are made that does not affect the 
+overwhelming majority of cases, but there could be odd situations where
+there is a difference. Some others used hidden assumptions (like credits are
+always multiples of 15 in BScNew). 
+Finally, my interpretation of the rules may not be correct!
+</p>
+<p>
+For the purpose of this assignment, what is described below (and any 
+subsequent clarification made by me) is the ultimate source of information.
+But for the actual degree classification you obtain in the end, the 
+university's decision is final.
+Please do not complain to me and/or the university if the two give different
+results.
+</p>
+<p>
+Also, the following description does not take into account any "exceptional
+variations" made to the rules due to Covid-19.
+<!--(Trust me, they are complicated enough without them.)-->
+</p>
+<p>
+<b>A note about numerical accuracy.</b>
+In real life, your marks and averages are supposed to be in 2 decimal places,
+but different rounding conventions apply depending on different versions
+of the rules:
+</p>
+<ul>
+<li>
+For BScStudentOld and MScStudent, marks are recorded to 2 decimal places but 
+implicitly rounded to integers when comparing against mark thresholds in 
+degree classification rules.
+</li>
+<li>
+For BScStudentNew, 2 decimal places are actually used.
+</li>
+<!--<li>
+For MScStudent, marks are actually rounded to integers, and averages are
+implicitly rounded when comparing against thresholds as in BScStudentOld.
+</li>-->
+</ul>
+<p>
+</p>
+<p>
+For everyone's sanity (and maybe one day the university will come to its 
+senses), instead of managing them separately, we will just assume
+in this assignment that everything is of the <code>float</code> data type.
+Furthermore we adjusted the degree classification rules
+for BScStudentOld and MScStudent to include an offset of 0.5 from the 
+officially stated ones for all mark thresholds.
+</p>
+
+<!-- Don't worry, we will revisit this in your Assignment 3! -->
+
+<h2>All BSc Students</h2>
+
+<p>
+Students take a total of 120 credits of modules in each of year 2 and 3.
+First you need to calculate the credit weighted average (CWA) for each year,
+given by this formula:
+</p>
+<pre>
+                sum (credit of module i * mark of module i)
+CWA of a year = -------------------------------------------
+                       sum (credit of module i)
+</pre>
+<p>
+where the sums are over all modules of that year.
+For example, if there is a 60-credit module of mark 66.6, a 40-credit module
+of mark 44.4 and a 20-credit module of mark 22.2, the CWA is
+(60*66.6 + 40*44.4 + 20*22.2)/120 = 51.8.
+</p>
+<p>
+Then there is an overall CWA (OCWA), based on the Y2 and Y3 CWA (to be 
+described below).
+</p>
+<!--<p>
+Y1 marks have no significance (other than to get you to Y3!)
+</p>-->
+
+<h3>BScStudentsOld</h3>
+
+<p>
+First, calculate the OCWA,
+by mixing the Y2 CWA and Y3 CWA in the ratio 2:3. That is,
+OCWA = 0.4 * Y2CWA + 0.6 * Y3CWA.
+</p>
+<p>
+Then, determine whether each Y2 and Y3 module is a pass or fail. 
+A module is a pass if (i) its mark is at least 39.50; or
+(ii) its mark is at least 34.50 and the CWA <b>of that year</b> is at least
+39.50. Otherwise it is a fail.
+Count the number of credits of failed (Y2 and Y3) modules.
+</p>
+<p>
+Then you need to count the number of credits (in Y2 and Y3) where the 
+module mark falls into each of the bands in the table below. For example
+"credits at 69.5+ >= 120" means you require 120 or more credits of modules
+with marks at or above 69.5.
+</p>
+<p>
+With all this, finally the degree classification can be decided
+by applying the following rules in descending order:
+</p>
+
+<table border="1">
+<tr>
+<th>Outcome</th>
+<th>Condition</th>
+</tt>
+<tr>
+<td>Fail</td>
+<td>OCWA < 34.5 OR failed credits >= 50</td>
+</tr>
+<tr>
+<td>First class</td>
+<td>OCWA &gt;= 69.5</td>
+</tr>
+<tr>
+<td>First class</td>
+<td>OCWA &gt;= 66.5 AND credits at 69.5+ >= 120 AND failed credits < 40</td>
+</tr>
+<tr>
+<td>Borderline first class</td>
+<td>OCWA &gt;= 66.5 AND credits at 69.5+ >= 90 AND credits at 67.5+ >= 120 AND failed credits < 40</td>
+</tr>
+<tr>
+<td>Upper second class</td>
+<td>OCWA &gt;= 66.5 AND credits at 69.5+ >= 120 AND failed credits >= 40</td>
+</tr>
+<tr>
+<td>Upper second class</td>
+<td>OCWA &gt;= 59.5</td>
+</tr>
+<tr>
+<td>Upper second class</td>
+<td>OCWA &gt;= 56.5 AND credits at 59.5+ >= 120 AND failed credits < 40</td>
+</tr>
+<tr>
+<td>Borderline upper second class</td>
+<td>OCWA &gt;= 56.5 AND credits at 59.5+ >= 90 AND credits at 57.5+ >= 120 AND failed credits < 40</td>
+</tr>
+<tr>
+<td>Lower second class</td>
+<td>OCWA &gt;= 56.5 AND credits at 59.5+ >= 120 AND failed credits >= 40</td>
+</tr>
+<tr>
+<td>Lower second class</td>
+<td>OCWA &gt;= 49.5</td>
+</tr>
+<tr>
+<td>Lower second class</td>
+<td>OCWA &gt;= 46.5 AND credits at 49.5+ >= 120 AND failed credits < 40</td>
+</tr>
+<tr>
+<td>Borderline lower second class</td>
+<td>OCWA &gt;= 46.5 AND credits at 49.5+ >= 90 AND credits at 47.5+ >= 120 AND failed credits < 40</td>
+</tr>
+<tr>
+<td>Third class</td>
+<td>OCWA &gt;= 46.5 AND credits at 49.5+ >= 120 AND failed credits >= 40</td>
+</tr>
+<tr>
+<td>Third class</td>
+<td>OCWA &gt;= 39.5</td>
+</tr>
+<tr>
+<td>Pass</td>
+<td>OCWA &gt;= 34.5</td>
+</tr>
+</table>
+
+<h3>BScStudentNew</h3>
+
+<p>
+First, calculate the OCWA,
+by mixing the Y2 CWA and Y3 CWA in the ratio 33:67, that is
+OCWA = 0.33 * Y2CWA + 0.67 * Y3CWA.
+</p>
+<p>
+Then, determine the total number of credits of failed Y2 or Y3 modules. 
+A module is a pass if its mark is at least 40.00, otherwise it is a fail. 
+<!--All Y1, Y2 and Y3 modules are counted. -->
+<!--Since Y1 module marks are not otherwise used,
+for Y1 the actual module marks are not given here and only the number of 
+failed credits is supplied (by the <code>setY1FailedCredits()</code> member
+function.)-->
+</p>
+<p>
+Then, you need to count the number of credits (in Y2 and Y3) where the 
+module mark falls into each of the bands in the table below. Note that some
+are specific to Y3, e.g.
+"Y3 credits at 70+ >= 30" means you require 30 or more credits of Y3 modules
+with marks at or above 70.00.
+</p>
+<p>
+With all this, finally the degree classification can be decided
+by applying the following rules in descending order:
+</p>
+
+<table border="1">
+<tr>
+<th>Outcome</th>
+<th>Condition</th>
+</tt>
+<tr>
+<td>Fail</td>
+<td>OCWA < 35.00 OR failed credits > 45</td>
+</tr>
+<tr>
+<td>First class</td>
+<td>OCWA &gt;= 70.00 AND failed credits <= 30</td>
+</tr>
+<tr>
+<td>First class</td>
+<td>OCWA &gt;= 68.00 AND credits at 70+ >= 120 AND Y3 credits at 70+ >= 30
+AND failed credits <= 30</td>
+</tr>
+<tr>
+<td>Borderline first class</td>
+<td>OCWA &gt;= 68.00 AND credits at 70+ >= 90 AND credits at 68+ >= 120
+AND Y3 credits at 70+ >= 30 AND failed credits <= 30</td>
+</tr>
+<tr>
+<td>Upper second class</td>
+<td>OCWA &gt;= 60.00</td>
+</tr>
+<tr>
+<td>Upper second class</td>
+<td>OCWA &gt;= 58.00 AND credits at 60+ >= 120 AND Y3 credits at 60+ >= 30</td>
+</tr>
+<tr>
+<td>Borderline upper second class</td>
+<td>OCWA &gt;= 58.00 AND credits at 60+ >= 90 AND credits at 58+ >= 120
+AND Y3 credits at 60+ >= 30</td>
+</tr>
+<tr>
+<td>Lower second class</td>
+<td>OCWA &gt;= 50.00</td>
+</tr>
+<tr>
+<td>Lower second class</td>
+<td>OCWA &gt;= 48.00 AND credits at 50+ >= 120 AND Y3 credits at 50+ >= 30</td>
+</tr>
+<tr>
+<td>Borderline lower second class</td>
+<td>OCWA &gt;= 48.00 AND credits at 50+ >= 90 AND credits at 48+ >= 120
+AND Y3 credits at 50+ >= 30</td>
+</tr>
+<tr>
+<td>Third class</td>
+<td>OCWA &gt;= 40.00</td>
+</tr>
+<tr>
+<td>Third class</td>
+<td>OCWA &gt;= 38.00 AND credits at 40+ >= 120 AND Y3 credits at 40+ >= 30</td>
+</tr>
+<tr>
+<td>Pass</td>
+<td>OCWA &gt;= 35.00</td>
+</tr>
+</table>
+
+<h2>MSc Students</h2>
+
+<p>
+Students take a total of 180 credits of modules in the year, including
+a 60-credit project. The other 120 credits are referred to as the
+"taught part".
+</p>
+<p>
+First you need to calculate the overall credit weighted average (OCWA),
+using the same formula as in the BScStudent section but over all 180
+credits.
+</p>
+<p>
+Next, you need to count the number of credits at each of the bands below.
+In addition to the "credits at 69.5+" type of bands (see BScStudentOld),
+there is a "narrow fail" which means a mark greater than or equal to 39.5 but
+less than 49.5, and "bad fail" which means a mark below 39.5.
+Then the degree classification is made according to:
+</p>
+<table border="1">
+<tr>
+<th>Outcome</th>
+<th>Condition</th>
+</tt>
+<tr>
+<td>Distinction</td>
+<td>(OWCA >= 69.5 OR taught part credits at 69.5+ >= 60)
+AND project mark >= 69.5 AND narrow or bad fail credits == 0</td>
+</tr>
+<tr>
+<td>Merit</td>
+<td>(OWCA >= 59.5 OR taught part credits at 59.5+ >= 60)
+AND project mark >= 59.5 AND narrow fail credits <= 15 AND
+bad fail credits == 0</td>
+</tr>
+<tr>
+<td>Pass</td>
+<td>(OWCA >= 49.5 OR taught part credits at 49.5+ >= 90)
+AND project mark >= 49.5 AND narrow fail credits <= 30 AND
+bad fail credits == 0</td>
+</tr>
+<tr>
+<td>Fail</td>
+<td>All other cases</td>
+</tr>
+</table>
+
+</body>
+</html>
